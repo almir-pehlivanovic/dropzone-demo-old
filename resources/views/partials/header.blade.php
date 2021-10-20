@@ -76,7 +76,7 @@
                             <li class="menu-hover">
                                 <a href="#">
                                     <div class="float-left">
-                                        <img src="images/user2.jpg" class="img-circle" alt="User Image">
+                                        <img src="{{ asset('images/user2.jpg') }}" class="img-circle" alt="User Image">
                                     </div>
                                     <h4>
                                         Support Team 
@@ -93,7 +93,7 @@
                             <li class="menu-hover">
                                 <a href="#">
                                     <div class="float-left">
-                                        <img src="images/user2.jpg" class="img-circle" alt="User Image">
+                                        <img src="{{ asset('images/user2.jpg') }}" class="img-circle" alt="User Image">
                                     </div>
                                     <h4>
                                         Support Team 
@@ -110,7 +110,7 @@
                             <li class="menu-hover">
                                 <a href="#">
                                     <div class="float-left">
-                                        <img src="images/user2.jpg" class="img-circle" alt="User Image">
+                                        <img src="{{ asset('images/user2.jpg') }}" class="img-circle" alt="User Image">
                                     </div>
                                     <h4>
                                         Support Team 
@@ -136,7 +136,7 @@
             <!-- Profile dropdown -->
             <li class="list-inline-item user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="images/user2.jpg" class="user-image" alt="User Image">
+                    <img src="{{ asset('images/user2.jpg') }}" class="user-image" alt="User Image">
                     <span class="d-none d-sm-inline">Almir Pehlivanovic</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-user notifications-menu-width" >

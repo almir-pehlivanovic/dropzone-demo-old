@@ -16,6 +16,7 @@ class CreateDropZonesTable extends Migration
         Schema::create('drop_zones', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->text('body');
             $table->text('images');
             $table->timestamps();

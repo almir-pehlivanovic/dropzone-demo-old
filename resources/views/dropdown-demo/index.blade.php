@@ -1,20 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Collapsible Sidebar Using Bootstrap 4</h2>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-    <div class="line"></div>
-    <h2>Collapsible Sidebar Using Bootstrap 4</h2>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-    <div class="line"></div>
+    <div class="container-fluid px-0">
+        <div class="row m-0 justify-content-center">
+            <div class="col-md-12 px-0">
+                <a href="{{ route('dropzone.create') }}" type="button" class="btn btn-success">Add New</a>
+                <div class="row m-0">
+                    <div class="col-12 p-0 mt-3">
+                        @include('partials.messages')
+                    </div>
+                </div>
+                <div class="card mt-3 mb-4">
+                    <div class="card-header">Content List</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+
+                                @include('dropdown-demo.table')
+
+                            <div class="row m-0">
+                                <div class="col-6 pl-0">
+                                    <?php //$count = $rooms->count();
+                                        $count = 5;
+                                    ?>
+                                    <small> Showing {{ $count }} {{ Str::of('item')->plural($count)}}</small>
+                                </div>
+                                <div class="col-6 pr-0">
+                                    <div class="paginate-links float-right">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

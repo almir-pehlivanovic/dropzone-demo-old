@@ -18,7 +18,7 @@
 
             @include('partials.sidebar')
 
-            <div class="content position-relative">
+            <div class="content position-relative w-100">
 
                 @include('partials.header')
 

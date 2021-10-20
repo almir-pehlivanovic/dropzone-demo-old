@@ -22,9 +22,10 @@ class DropZoneFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
-            'body' => $this->faker->text($maxNbChars = 200),
-            'images' => '',
+            'title'     => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
+            'slug'      =>$this->faker->slug(),
+            'body'      => $this->faker->text($maxNbChars = 200),
+            'images'    => '',
         ];
     }
 }
