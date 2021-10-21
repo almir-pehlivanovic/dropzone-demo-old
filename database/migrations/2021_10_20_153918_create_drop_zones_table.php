@@ -18,7 +18,7 @@ class CreateDropZonesTable extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('body');
-            $table->text('images');
+            $table->text('images')->nullable();
             $table->timestamps();
         });
     }

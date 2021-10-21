@@ -16,5 +16,7 @@ use App\Http\Controllers\DropZoneController;
 Route::get('/', function () {
     return view('dropdown-demo.index');
 });
+//Route for submitting dropzone data
+Route::post('/storeimgae', [DropZoneController::class, 'storeImage']);
 
 Route::resource('dropzone', DropZoneController::class);

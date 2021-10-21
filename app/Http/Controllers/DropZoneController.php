@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\DropZone;
 
 class DropZoneController extends Controller
 {
+    protected $uploadPath;
+
+    public function __construct()
+    {
+        $this->uploadPath = storage_path('app\public\uploads');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,7 +41,44 @@ class DropZoneController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+			$dropzone           = new DropZone();
+            $dropzone->title    = $request->title;
+            $dropzone->body     = $request->body;
+            $dropzone->save();
+
+            $dropzoneId = $dropzone->id; // this give us the last inserted record id
+		}
+		catch (\Exception $e) {
+			return response()->json(['status'=>'exception', 'msg'=>$e->getMessage()]);
+		}
+		return response()->json(['status'=>"success", 'dropzoneId'=>$dropzoneId]);
+    }
+
+    // We are submitting are image along with dropzoneId and with the help of dropzone id we are updateing our record
+	public function storeImage(Request $request)
+	{
+        $dropzoneId = $request->dropzoneId;
+        $names      = [];
+
+        if($request->hasFile('file'))
+        {
+            foreach($request->file('file') as $img)
+            {
+                $fileName       = $img->getClientOriginalName();
+                $destination    = $this->uploadPath;
+                array_push($names, $fileName);
+
+                $img->move($destination, $fileName);
+            }
+
+            $dropzone   = new DropZone();
+            $images     = json_encode($names);
+
+            $dropzone->where('id', $dropzoneId)->update(['images' => $images]);
+
+            return response()->json(['status' => "success"]);
+        }
     }
 
     /**
