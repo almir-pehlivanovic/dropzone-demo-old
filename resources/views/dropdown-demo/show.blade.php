@@ -8,10 +8,9 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 col-lg-8 mx-auto">
                 <div class="card mt-3">
                     <div class="card-header">{{ $dropzone->title }}</div>
-
                     <div class="card-body">
                         <div class="form-group">
                             <label for="title">Title</label>
