@@ -19,7 +19,9 @@
                 <td class="text-center">
                     <a href="{{ route('dropzone.show', $record->slug) }}" type="button" class="btn btn-info btn-sm mt-2 mt-xl-0"> View</a>
                     <a href="{{ route('dropzone.edit', $record->slug) }}" type="button" class="btn btn-warning btn-sm mt-2 mt-xl-0"> Edit</a>
-                    <form class="d-inline" action="{{ route('dropzone.destroy', $record->id) }}" method="DELETE">
+                    <form class="d-inline" action="{{ route('dropzone.destroy', $record->id) }}" method="POST">
+                        @csrf
+                        {{ method_field('DELETE') }}
                         <button type="submit" class="btn btn-danger btn-sm mt-2 mt-xl-0"  onclick="return confirm('Are you sure you want to delete record?' )"> Delete</button>
                     </form>  
                 </td>

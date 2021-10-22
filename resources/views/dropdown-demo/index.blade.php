@@ -5,6 +5,18 @@
         <div class="row m-0 justify-content-center">
             <div class="col-md-12 px-0">
                 <a href="{{ route('dropzone.create') }}" type="button" class="btn btn-success">Add New</a>
+                @if(session('message'))
+                <div class="row m-0">
+                    <div class="col-12 p-0 mt-3">
+                        <div class="alert alert-info d-flex justify-content-between">
+                            <p class="mb-0">{{ session('message') }}</p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 <div class="row m-0 d-none" id="session-message">
                     <div class="col-12 p-0 mt-3">
                         <div class="alert alert-info d-flex justify-content-between">

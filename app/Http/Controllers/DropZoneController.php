@@ -127,6 +127,9 @@ class DropZoneController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DropZone::findOrFail($id);
+
+        return redirect('/dropzone')->with('message', "Record deleted succesfully!");
+        
     }
 }
