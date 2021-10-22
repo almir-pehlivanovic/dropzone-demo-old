@@ -7,7 +7,7 @@ use App\Models\DropZone;
 
 class DropZoneController extends Controller
 {
-    protected $uploadPath;
+    protected $uploadPath, $paginationNum = 10;
 
     public function __construct()
     {
@@ -20,7 +20,9 @@ class DropZoneController extends Controller
      */
     public function index()
     {
-        return view('dropdown-demo.index');
+        $dropzoneRecords = DropZone::paginate($this->paginationNum);
+
+        return view('dropdown-demo.index', compact('dropzoneRecords'));
     }
 
     /**

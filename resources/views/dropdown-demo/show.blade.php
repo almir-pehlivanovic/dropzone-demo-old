@@ -27,11 +27,17 @@
                         <div class="form-group">
                             <label for="images">Images</label>
                             <div class="border fancybox-gallery-container py-3 rounded-lg" id="images">
-                                @foreach( json_decode($dropzone->images, true) as $image)
-                                    <a class="view-image position-relative my-2" data-fancybox="gallery" data-src="{{ asset(imagePath($image)) }}">
-                                        <img class="img-fluid" src="{{ asset(imagePath($image)) }}" />
-                                    </a>
-                                @endforeach
+                                
+                                @if(!$dropzone->images)
+                                <p class="pl-3 mb-0 form-control-static">There is no images for this record</p>
+                                @else
+                                    @foreach( json_decode($dropzone->images, true) as $image)
+                                        <a class="view-image position-relative my-2" data-fancybox="gallery" data-src="{{ asset(imagePath($image)) }}">
+                                            <img class="img-fluid" src="{{ asset(imagePath($image)) }}" />
+                                        </a>
+                                    @endforeach
+                                @endif
+                            
                             </div>
                         </div>
                         <a href="#" onclick="history.back()" type="button" class="btn btn-primary d-inline">Back</a>

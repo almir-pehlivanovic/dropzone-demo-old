@@ -24,14 +24,13 @@
 
                             <div class="row m-0">
                                 <div class="col-6 pl-0">
-                                    <?php //$count = $rooms->count();
-                                        $count = 5;
+                                    <?php $count = $dropzoneRecords->count();
                                     ?>
                                     <small> Showing {{ $count }} {{ Str::of('item')->plural($count)}}</small>
                                 </div>
                                 <div class="col-6 pr-0">
                                     <div class="paginate-links float-right">
-                                        
+                                        {{ $dropzoneRecords->appends( Request::query())->links() }}
                                     </div>
                                 </div>
                             </div>

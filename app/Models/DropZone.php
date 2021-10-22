@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Support\Str;
 
 class DropZone extends Model
 {
@@ -25,5 +26,12 @@ class DropZone extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    public function getBodyTextAttribute($value)
+    {
+        $strBody = Str::limit($this->body, 35, '...');
+
+        return $strBody;
     }
 }

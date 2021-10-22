@@ -9,18 +9,21 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>Placeat nobis tenetur totam reiciendis et impedit.</td>
-            <td>Rerum dicta rem qui non ut dolor. Deleniti possimus hic consectetur ducimus quibusdam amet. Quisquam ipsam incidunt placeat consequatur. Voluptatem dicta et cupiditate ex placeat enim.</td>
-            <td>2021-10-20 15:48:15</td>
-            <td class="text-center">
-                <a href="{{ route('dropzone.create') }}" type="button" class="btn btn-info btn-sm mt-2 mt-xl-0"> View</a>
-                <a href="{{ route('dropzone.edit', 1) }}" type="button" class="btn btn-warning btn-sm mt-2 mt-xl-0"> Edit</a>
-                <form class="d-inline" action="{{ route('dropzone.destroy', 1) }}" method="DELETE">
-                    <button type="submit" class="btn btn-danger btn-sm mt-2 mt-xl-0"> Delete</button>
-                </form>  
-            </td>
-        </tr>        
+        
+        @foreach($dropzoneRecords as $record)
+            <tr>
+                <td>{{ $record->id }}</td>
+                <td>{{ $record->title }}</td>
+                <td>{{ $record->bodyText }}</td>
+                <td>{{ $record->created_at->diffForHumans() }}</td>
+                <td class="text-center">
+                    <a href="{{ route('dropzone.show', $record->slug) }}" type="button" class="btn btn-info btn-sm mt-2 mt-xl-0"> View</a>
+                    <a href="{{ route('dropzone.edit', $record->slug) }}" type="button" class="btn btn-warning btn-sm mt-2 mt-xl-0"> Edit</a>
+                    <form class="d-inline" action="{{ route('dropzone.destroy', $record->id) }}" method="DELETE">
+                        <button type="submit" class="btn btn-danger btn-sm mt-2 mt-xl-0"  onclick="return confirm('Are you sure you want to delete record?' )"> Delete</button>
+                    </form>  
+                </td>
+            </tr>        
+        @endforeach
     </tbody>
 </table>
