@@ -50,3 +50,33 @@
     width: 100%;
     color: #ff6347;
 }
+
+/* Fancybox style */
+
+.fancybox-gallery-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.fancybox-gallery-container a{
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 10px;
+    cursor: pointer;
+}
+.view-image:hover::before{
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url("{{ asset('images/show.svg') }}");
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.view-image:hover::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgb(255, 255, 255, 0.5);
+}

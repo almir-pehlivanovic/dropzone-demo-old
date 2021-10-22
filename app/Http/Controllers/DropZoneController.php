@@ -84,12 +84,14 @@ class DropZoneController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $slug
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        $dropzone = DropZone::where('slug', $slug)->firstOrFail();
+        
+        return view('dropdown-demo.show', compact('dropzone'));
     }
 
     /**
