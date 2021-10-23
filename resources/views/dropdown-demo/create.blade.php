@@ -58,8 +58,9 @@ $(function() {
         addRemoveLinks: true,
         autoProcessQueue: false,
         uploadMultiple: true,
-        parallelUploads: 10,
-        maxFiles: 3,
+        parallelUploads: 20,
+        maxFiles: 10,
+        acceptedFiles: "image/jpeg,jpg",
         params: {
             _token: token
         },
@@ -85,8 +86,6 @@ $(function() {
                             //process the queue
                             myDropzone.processQueue();
 
-                            sessionStorage.setItem("message", "New item added Successfully! ");
-                            window.location.href = "{{ route('dropzone.index') }}";
                         }else if(result.status =="fail"){
                             let requiredField = document.querySelectorAll('.validation-message');
                             requiredField.forEach(function(item){

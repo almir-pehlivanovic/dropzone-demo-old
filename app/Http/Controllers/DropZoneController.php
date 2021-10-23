@@ -92,8 +92,6 @@ class DropZoneController extends Controller
             $dropzone->where('id', $dropzoneId)->update(['images' => $images]);
 
             return response()->json(['status' => "success"]);
-        }else{
-            return response()->json(['status' => "faild"]);
         }
     }
 
@@ -161,10 +159,11 @@ class DropZoneController extends Controller
         if ($validator->fails()) {
             return response()->json(['status'=>"fail"]);
         }
-        
+        $passed         = "";
         $dropzone       = DropZone::where('id', $id)->firstOrFail();
         $imagesArray    = json_decode($request->images);
         $imageList      = [];
+
 
         //check if image exists & remove unused images from server
         if($request->images != null)
@@ -172,11 +171,11 @@ class DropZoneController extends Controller
             //deleting of the images that are removed from edit field
             $oldImages          = json_decode($dropzone->images);
             $imagesForDeleting  = array_diff($oldImages, $imagesArray);
-            
             //Deleting images from server
             if(count($imagesForDeleting) > 0){
                 foreach($imagesForDeleting as $image)
                 {
+
                     $imagePath = $this->uploadPath . '\\' . $image;
     
                     if(file_exists($imagePath)){
@@ -184,16 +183,14 @@ class DropZoneController extends Controller
                     }
                 }
             }
-
+            $passed = "passed";
+            
             //update new records of iamges in database
             foreach($imagesArray as $image){  
                 array_push($imageList, $image);
             }
             $images = json_encode($imageList);
-        }
-
-        else
-        {
+        }else{
             // Check if images exist in database 
             if($dropzone->images){
                 foreach(json_decode($dropzone->images) as $image)
@@ -219,12 +216,14 @@ class DropZoneController extends Controller
         catch (\Exception $e) {
 			return response()->json(['status'=>'exception', 'msg'=>$e->getMessage()]);
 		}
+        $slug = $dropzone->slug;
 
-        return response()->json(['status' => "success", "slug" => $dropzone->slug, "method" => "edit"]);
+        return response()->json(['status' => "success", "slug" => $slug, "method" => "edit", "passed" => $passed ]);
     }
 
     public function storeUpdateImage(Request $request)
     {
+     
         $dropzoneId = $request->dropzoneId;
         $records    = DropZone::where('id', $dropzoneId)->firstOrFail();
         $names      = [];
@@ -232,7 +231,7 @@ class DropZoneController extends Controller
         //Push array with existing images
         if($records->images)
         {
-            foreach(json_decode($records->images, true) as $image)
+            foreach(json_decode($records->images) as $image)
             {
                 array_push($names, $image);
             }
@@ -251,11 +250,11 @@ class DropZoneController extends Controller
             }
 
             $images     = json_encode($names);
+            $dropzone   = new DropZone();
 
-            DropZone::where('id', $dropzoneId)->update(['images' => $images]);
-
-            return response()->json(['status' => "success", "slug" => $dropzone->slug, "method" => "edit"]);
+            $dropzone->where('id', $dropzoneId)->update(['images' => $images]);
         }
+        return response()->json(['status' => "success", "slug" => $records->slug, "method" => "edit"]);
     }
 
     /**

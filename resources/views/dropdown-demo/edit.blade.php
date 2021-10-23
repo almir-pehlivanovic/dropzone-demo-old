@@ -76,8 +76,9 @@
         addRemoveLinks: true,
         autoProcessQueue: false,
         uploadMultiple: true,
-        parallelUploads: 10,
-        maxFiles: 3,
+        parallelUploads: 20,
+        maxFiles: 10,
+        acceptedFiles: "image/jpeg,jpg",
         params: {
             _token: token
         },
@@ -133,13 +134,16 @@
                     url: URL,
                     data: formData,
                     success: function(result){
+                        console.log(result);
                         if(result.status == "success"){
+                            if(result.passed == "passed"){
+                                sessionStorage.setItem("message", "Record updated Successfully! ");
+                                window.location.href = "/dropzone/" + result.slug + "/" + result.method;
+                            }
                             //process the queue
                             myDropzone.processQueue();
 
-                            sessionStorage.setItem("message", "Record updated Successfully! ");
-                            window.location.href = "/dropzone/" + result.slug + "/" + result.method;
-                        }else if(result.status =="fail"){
+                        }else if(result.status == "fail"){
                             let requiredField = document.querySelectorAll('.validation-message');
                             requiredField.forEach(function(item){
                                 item.classList.remove('d-none')
@@ -177,10 +181,9 @@
             this.on("successmultiple", function(files, response) {
             // Gets triggered when the files have successfully been sent.
             // Redirect user or notify of success.
-                console.log('After image upload', response);
                 if(response.status == 'success'){
                     sessionStorage.setItem("message", "Record updated Successfully! ");
-                    window.location.href = "/dropzone/" + result.slug + "/" + result.method;
+                    window.location.href = "/dropzone/" + response.slug + "/" + response.method;
                 }
             });
             
