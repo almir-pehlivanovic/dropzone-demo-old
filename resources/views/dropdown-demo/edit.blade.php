@@ -6,12 +6,7 @@
         height: 100%;
         object-fit: cover;
     }
-    .dropzone-previews {
-        display: block;
-        flex-wrap: nowrap;
-        background: #fbfdff;
-        text-align: left;
-    }
+  
 </style>
 @endsection
 @section('content')

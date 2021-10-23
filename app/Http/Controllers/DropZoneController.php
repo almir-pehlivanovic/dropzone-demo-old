@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DropZone;
+use Carbon\Carbon;
 
 class DropZoneController extends Controller
 {
@@ -68,10 +69,11 @@ class DropZoneController extends Controller
             foreach($request->file('file') as $img)
             {
                 $fileName       = $img->getClientOriginalName();
+                $fileNameU      = time() . "-" .  $fileName;
                 $destination    = $this->uploadPath;
-                array_push($names, $fileName);
+                array_push($names, $fileNameU);
 
-                $img->move($destination, $fileName);
+                $img->move($destination, $fileNameU);
             }
 
             $dropzone   = new DropZone();
@@ -122,8 +124,8 @@ class DropZoneController extends Controller
         if($record->images != null){
             foreach(json_decode($record->images) as $image)
             {
-                $filePath = $targetDir . $image;
-                $size = filesize($filePath);
+                $filePath   = $targetDir . $image;
+                $size       = filesize($filePath);
                 $fileList[] = ['name' => $image, 'size' => $size, 'path' => asset(imagePath($image)) ];
             }
         }
@@ -187,10 +189,11 @@ class DropZoneController extends Controller
             foreach($request->file('file') as $img)
             {
                 $fileName       = $img->getClientOriginalName();
+                $fileNameU      = time() . "-" .  $fileName;
                 $destination    = $this->uploadPath;
-                array_push($names, $fileName);
+                array_push($names, $fileNameU);
 
-                $img->move($destination, $fileName);
+                $img->move($destination, $fileNameU);
             }
 
             $images     = json_encode($names);
