@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DropZone;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class DropZoneController extends Controller
 {
@@ -44,6 +45,15 @@ class DropZoneController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'body' => 'required',
+          ]);
+          
+        if ($validator->fails()) {
+            return response()->json(['status'=>"fail"]);
+        }
+
         try {
 			$dropzone           = new DropZone();
             $dropzone->title    = $request->title;
@@ -53,9 +63,9 @@ class DropZoneController extends Controller
             $dropzoneId = $dropzone->id; // this give us the last inserted record id
 		}
 		catch (\Exception $e) {
-			return response()->json(['status'=>'exception', 'msg'=>$e->getMessage()]);
+			return response()->json(['status' => 'exception', 'msg' => $e->getMessage()]);
 		}
-		return response()->json(['status'=>"success", 'dropzoneId'=>$dropzoneId]);
+		return response()->json(['status' => "success", 'dropzoneId' => $dropzoneId]);
     }
 
     // We are submitting are image along with dropzoneId and with the help of dropzone id we are updateing our record
@@ -82,6 +92,8 @@ class DropZoneController extends Controller
             $dropzone->where('id', $dropzoneId)->update(['images' => $images]);
 
             return response()->json(['status' => "success"]);
+        }else{
+            return response()->json(['status' => "faild"]);
         }
     }
 
@@ -146,7 +158,8 @@ class DropZoneController extends Controller
         $imageList      = [];
 
         //check if image exists & remove unused images from server
-        if($request->images != null){
+        if($request->images != null)
+        {
             //deleting of the images that are removed from edit field
             $oldImages          = json_decode($dropzone->images);
             $imagesForDeleting  = array_diff($oldImages, $imagesArray);
@@ -168,7 +181,10 @@ class DropZoneController extends Controller
                 array_push($imageList, $image);
             }
             $images = json_encode($imageList);
-        }else{
+        }
+
+        else
+        {
             // Check if images exist in database 
             if($dropzone->images){
                 foreach(json_decode($dropzone->images) as $image)
