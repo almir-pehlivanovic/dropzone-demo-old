@@ -145,12 +145,41 @@ class DropZoneController extends Controller
         $imagesArray    = json_decode($request->images);
         $imageList      = [];
 
+        //check if image exists & remove unused images from server
         if($request->images != null){
+            //deleting of the images that are removed from edit field
+            $oldImages          = json_decode($dropzone->images);
+            $imagesForDeleting  = array_diff($oldImages, $imagesArray);
+            
+            //Deleting images from server
+            if(count($imagesForDeleting) > 0){
+                foreach($imagesForDeleting as $image)
+                {
+                    $imagePath = $this->uploadPath . '\\' . $image;
+    
+                    if(file_exists($imagePath)){
+                        unlink($imagePath);
+                    }
+                }
+            }
+
+            //update new records of iamges in database
             foreach($imagesArray as $image){  
                 array_push($imageList, $image);
             }
             $images = json_encode($imageList);
         }else{
+            // Check if images exist in database 
+            if($dropzone->images){
+                foreach(json_decode($dropzone->images) as $image)
+                {
+                    $imagePath = $this->uploadPath . '\\' . $image;
+    
+                    if(file_exists($imagePath)){
+                        unlink($imagePath);
+                    }
+                }
+            }
             $images = null;
         }
 
@@ -175,7 +204,7 @@ class DropZoneController extends Controller
         $records    = DropZone::where('id', $dropzoneId)->firstOrFail();
         $names      = [];
 
-        //Push array withe existing images
+        //Push array with existing images
         if($records->images)
         {
             foreach(json_decode($records->images, true) as $image)
@@ -212,7 +241,20 @@ class DropZoneController extends Controller
      */
     public function destroy($id)
     {
-        DropZone::findOrFail($id)->delete();
+        $dropzone = DropZone::findOrFail($id);
+
+        if($dropzone->images)
+        {
+            foreach(json_decode($dropzone->images, true) as $image)
+            {
+                $imagePath = $this->uploadPath . '\\' . $image;
+    
+                if(file_exists($imagePath)){
+                    unlink($imagePath);
+                }
+            }
+        }
+        $dropzone->delete();
 
         return redirect('/dropzone')->with('message', "Record deleted succesfully!");
         
