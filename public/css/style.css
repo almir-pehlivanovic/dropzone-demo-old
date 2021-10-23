@@ -23,6 +23,7 @@
 .dropzone-previews{
     display: flex;
     flex-wrap: wrap;
+    background: #fbfdff;
 }
 .dropzone-inner-text{
     position: absolute;
