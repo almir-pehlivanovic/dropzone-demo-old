@@ -43,13 +43,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="title">Title</label>
-                                <input type="text" name="title" class="form-control" id="title" value="{{ $dropzone->title }}" aria-describedby="titleError">
-                                <small id="titleError" class="form-text text-danger">Enter valid title.</small>
+                                <input type="text" name="title" class="form-control" id="title" value="{{ $dropzone->title }}" aria-describedby="titleError" required>
+                                <small id="titleError" class="validation-message d-none form-text text-danger">Enter required field.</small>
                             </div>
                             <div class="form-group">
                                 <label for="body">Body</label>
-                                <textarea class="form-control" name="body" id="body" rows="3" aria-describedby="bodyError">{{ $dropzone->body }}</textarea>
-                                <small id="bodyError" class="form-text text-danger">Enter valid body.</small>
+                                <textarea class="form-control" name="body" id="body" rows="3" aria-describedby="bodyError" required>{{ $dropzone->body }}</textarea>
+                                <small id="bodyError" class="validation-message d-none form-text text-danger">Enter required field.</small>
                             </div>
                             <a href="#" onclick="history.back()" type="button" class="btn btn-primary d-inline">Back</a>
                             <button class="btn btn-success" type="submit">Save</button>
@@ -133,13 +133,17 @@
                     url: URL,
                     data: formData,
                     success: function(result){
-                        console.log(result);
                         if(result.status == "success"){
                             //process the queue
                             myDropzone.processQueue();
 
                             sessionStorage.setItem("message", "Record updated Successfully! ");
                             window.location.href = "/dropzone/" + result.slug + "/" + result.method;
+                        }else if(result.status =="fail"){
+                            let requiredField = document.querySelectorAll('.validation-message');
+                            requiredField.forEach(function(item){
+                                item.classList.remove('d-none')
+                            });
                         }else{
                             console.log("error");
                         }

@@ -153,6 +153,15 @@ class DropZoneController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'body' => 'required',
+          ]);
+          
+        if ($validator->fails()) {
+            return response()->json(['status'=>"fail"]);
+        }
+        
         $dropzone       = DropZone::where('id', $id)->firstOrFail();
         $imagesArray    = json_decode($request->images);
         $imageList      = [];
