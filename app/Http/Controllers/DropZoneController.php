@@ -20,7 +20,7 @@ class DropZoneController extends Controller
      */
     public function index()
     {
-        $dropzoneRecords = DropZone::paginate($this->paginationNum);
+        $dropzoneRecords = DropZone::orderBy('created_at', 'desc')->paginate($this->paginationNum);
 
         return view('dropdown-demo.index', compact('dropzoneRecords'));
     }
@@ -99,14 +99,37 @@ class DropZoneController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $slug
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        return view('dropdown-demo.edit');
+        $dropzone = DropZone::where('slug', $slug)->firstOrFail();
+
+        return view('dropdown-demo.edit',compact('dropzone'));
     }
 
+    //Display all images form database to dropzone container
+    public function updateImage(Request $request)
+    {
+        $targetDir  = $this->uploadPath . '\\';
+        $fileList   = [];
+        $dropzoneId = $request->dropzoneId;
+ 
+        $record = DropZone::where('id', $dropzoneId)->firstOrFail();
+
+        //Check if there is a images for specific record
+        if($record->images != null){
+            foreach(json_decode($record->images) as $image)
+            {
+                $filePath = $targetDir . $image;
+                $size = filesize($filePath);
+                $fileList[] = ['name' => $image, 'size' => $size, 'path' => asset(imagePath($image)) ];
+            }
+        }
+
+        return json_encode($fileList);
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -116,7 +139,66 @@ class DropZoneController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $dropzone       = DropZone::where('id', $id)->firstOrFail();
+        $imagesArray    = json_decode($request->images);
+        $imageList      = [];
+
+        if($request->images != null){
+            foreach($imagesArray as $image){  
+                array_push($imageList, $image);
+            }
+            $images = json_encode($imageList);
+        }else{
+            $images = null;
+        }
+
+        try {
+            $dropzone->slug = null;
+            $dropzone->update([
+                'title'     => $request->title,
+                'body'      => $request->body,
+                'images'    => $images
+            ]);    
+        }
+        catch (\Exception $e) {
+			return response()->json(['status'=>'exception', 'msg'=>$e->getMessage()]);
+		}
+
+        return response()->json(['status' => "success", "slug" => $dropzone->slug, "method" => "edit"]);
+    }
+
+    public function storeUpdateImage(Request $request)
+    {
+        $dropzoneId = $request->dropzoneId;
+        $records    = DropZone::where('id', $dropzoneId)->firstOrFail();
+        $names      = [];
+
+        //Push array withe existing images
+        if($records->images)
+        {
+            foreach(json_decode($records->images, true) as $image)
+            {
+                array_push($names, $image);
+            }
+        }
+
+        if($request->hasFile('file'))
+        {
+            foreach($request->file('file') as $img)
+            {
+                $fileName       = $img->getClientOriginalName();
+                $destination    = $this->uploadPath;
+                array_push($names, $fileName);
+
+                $img->move($destination, $fileName);
+            }
+
+            $images     = json_encode($names);
+
+            DropZone::where('id', $dropzoneId)->update(['images' => $images]);
+
+            return response()->json(['status' => "success", "slug" => $dropzone->slug, "method" => "edit"]);
+        }
     }
 
     /**

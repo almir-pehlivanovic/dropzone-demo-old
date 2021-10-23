@@ -36,7 +36,6 @@
     z-index: 0;
 }
 .dropzone{
-    box-shadow: 0px 2px 20px 0px #f2f2f2;
     border-radius: 10px;
 }
 .dropzone .dz-preview .dz-image{
@@ -60,10 +59,15 @@
 }
 .fancybox-gallery-container a{
     width: 150px;
-    height: auto;
+    height: 100px;
     display: block;
     margin: 0 10px;
     cursor: pointer;
+}
+.fancybox-gallery-container a img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 .view-image:hover::before{
     content: "";

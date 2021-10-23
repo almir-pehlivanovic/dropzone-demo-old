@@ -17,4 +17,7 @@ Route::get('/', [DropZoneController::class, 'index']);
 
 //Route for submitting dropzone data
 Route::post('/storeimgae', [DropZoneController::class, 'storeImage']);
+Route::post('/updateimage', [DropZoneController::class, 'updateImage'])->name('updateimage');
+Route::post('/storeupdatedimage', [DropZoneController::class, 'storeUpdateImage']);
+
 Route::resource('dropzone', DropZoneController::class);
