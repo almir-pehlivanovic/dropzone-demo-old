@@ -1,7 +1,7 @@
 <?php
 function imagePath($value)
 {
-    $imagePath = 'directory/' . $value;
+    $imagePath = '/storage/uploads/' . $value;
     
     return $imagePath;
 }
