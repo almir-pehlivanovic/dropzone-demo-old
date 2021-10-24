@@ -13,7 +13,7 @@ class DropZoneController extends Controller
 
     public function __construct()
     {
-        $this->uploadPath = storage_path('app\public\uploads');
+        $this->uploadPath = public_path('\directory');
     }
     /**
      * Display a listing of the resource.
