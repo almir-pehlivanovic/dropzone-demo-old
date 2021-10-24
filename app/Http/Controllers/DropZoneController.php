@@ -72,22 +72,12 @@ class DropZoneController extends Controller
 	public function storeImage(Request $request)
 	{
         $dropzoneId = $request->dropzoneId;
-        $names      = [];
+        $names = [];
 
         if($request->hasFile('file'))
         {
-            foreach($request->file('file') as $img)
-            {
-                $fileName       = $img->getClientOriginalName();
-                $fileNameU      = time() . "-" .  $fileName;
-                $destination    = $this->uploadPath;
-                array_push($names, $fileNameU);
-
-                $img->move($destination, $fileNameU);
-            }
-
+            $images     = $this->saveImageToFolder($request->file('file'), $names);
             $dropzone   = new DropZone();
-            $images     = json_encode($names);
 
             $dropzone->where('id', $dropzoneId)->update(['images' => $images]);
 
@@ -159,25 +149,22 @@ class DropZoneController extends Controller
         if ($validator->fails()) {
             return response()->json(['status'=>"fail"]);
         }
+
         $passed         = "";
         $dropzone       = DropZone::where('id', $id)->firstOrFail();
         $imagesArray    = json_decode($request->images);
         $imageList      = [];
 
-
         //check if image exists & remove unused images from server
-        if($request->images != null)
-        {
+        if($request->images != null){
+
             //deleting of the images that are removed from edit field
             $oldImages          = json_decode($dropzone->images);
             $imagesForDeleting  = array_diff($oldImages, $imagesArray);
             //Deleting images from server
             if(count($imagesForDeleting) > 0){
-                foreach($imagesForDeleting as $image)
-                {
-
+                foreach($imagesForDeleting as $image){
                     $imagePath = $this->uploadPath . '\\' . $image;
-    
                     if(file_exists($imagePath)){
                         unlink($imagePath);
                     }
@@ -192,16 +179,7 @@ class DropZoneController extends Controller
             $images = json_encode($imageList);
         }else{
             // Check if images exist in database 
-            if($dropzone->images){
-                foreach(json_decode($dropzone->images) as $image)
-                {
-                    $imagePath = $this->uploadPath . '\\' . $image;
-    
-                    if(file_exists($imagePath)){
-                        unlink($imagePath);
-                    }
-                }
-            }
+            $this->deleteImagesFromFolder($dropzone->images);
             $images = null;
         }
 
@@ -223,33 +201,19 @@ class DropZoneController extends Controller
 
     public function storeUpdateImage(Request $request)
     {
-     
         $dropzoneId = $request->dropzoneId;
         $records    = DropZone::where('id', $dropzoneId)->firstOrFail();
         $names      = [];
 
         //Push array with existing images
-        if($records->images)
-        {
-            foreach(json_decode($records->images) as $image)
-            {
+        if($records->images){
+            foreach(json_decode($records->images) as $image){
                 array_push($names, $image);
             }
         }
 
-        if($request->hasFile('file'))
-        {
-            foreach($request->file('file') as $img)
-            {
-                $fileName       = $img->getClientOriginalName();
-                $fileNameU      = time() . "-" .  $fileName;
-                $destination    = $this->uploadPath;
-                array_push($names, $fileNameU);
-
-                $img->move($destination, $fileNameU);
-            }
-
-            $images     = json_encode($names);
+        if($request->hasFile('file')){
+            $images     = $this->saveImageToFolder($request->file('file'), $names);
             $dropzone   = new DropZone();
 
             $dropzone->where('id', $dropzoneId)->update(['images' => $images]);
@@ -266,21 +230,38 @@ class DropZoneController extends Controller
     public function destroy($id)
     {
         $dropzone = DropZone::findOrFail($id);
+        $this->deleteImagesFromFolder($dropzone->images);
+        $dropzone->delete();
 
-        if($dropzone->images)
-        {
-            foreach(json_decode($dropzone->images, true) as $image)
-            {
+        return redirect('/dropzone')->with('message', "Record deleted succesfully!");
+        
+    }
+
+    //Refactor funtions
+    private function saveImageToFolder($values, $array)
+    {
+        $names = $array;
+        foreach($values as $img){
+            $fileName       = $img->getClientOriginalName();
+            $fileNameU      = time() . "-" .  $fileName;
+            $destination    = $this->uploadPath;
+            array_push($names, $fileNameU);
+
+            $img->move($destination, $fileNameU);
+        }
+        $images = json_encode($names);
+        return $images;
+    }
+
+    private function deleteImagesFromFolder($images)
+    {
+        if($images){
+            foreach(json_decode($images, true) as $image){
                 $imagePath = $this->uploadPath . '\\' . $image;
-    
                 if(file_exists($imagePath)){
                     unlink($imagePath);
                 }
             }
         }
-        $dropzone->delete();
-
-        return redirect('/dropzone')->with('message', "Record deleted succesfully!");
-        
     }
 }

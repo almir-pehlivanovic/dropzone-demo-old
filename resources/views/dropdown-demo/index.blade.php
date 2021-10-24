@@ -36,8 +36,7 @@
 
                             <div class="row m-0">
                                 <div class="col-6 pl-0">
-                                    <?php $count = $dropzoneRecords->count();
-                                    ?>
+                                    <?php $count = $dropzoneRecords->count();?>
                                     <small> Showing {{ $count }} {{ Str::of('item')->plural($count)}}</small>
                                 </div>
                                 <div class="col-6 pr-0">

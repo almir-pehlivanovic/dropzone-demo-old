@@ -60,6 +60,7 @@ $(function() {
         uploadMultiple: true,
         parallelUploads: 20,
         maxFiles: 10,
+        maxFilesize: 2,
         acceptedFiles: "image/jpeg,jpg",
         params: {
             _token: token
@@ -70,9 +71,9 @@ $(function() {
             // form submission
             $("form[name='demoform']").submit(function(event) {
                 event.preventDefault();
+                URL         = $("#demoform").attr('action');
+                formData    = $('#demoform').serialize();
 
-                URL = $("#demoform").attr('action');
-                formData = $('#demoform').serialize();
                 $.ajax({
                     type: 'POST',
                     url: URL,
@@ -97,31 +98,15 @@ $(function() {
                     }
                 });
             });
-            // Gets triggered when we submit the image.
-            this.on('sending', function(file, xhr, formData){
-                // fetch the user id from hidden input field and send that userid with our image
-                
-            });
             
-            this.on("success", function (file, response) {
-               
-            });
-            this.on("queuecomplete", function () {
-            
-            });
-            
-            // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-            // of the sending event because uploadMultiple is set to true.
-            this.on("sendingmultiple", function(files, xhr, formData) {
             // Gets triggered when the form is actually being sent.
-            // Hide the success button or the complete form.
+            this.on("sendingmultiple", function(files, xhr, formData) {
                 let dropzoneId = document.getElementById('dropzoneId').value;
                 formData.append('dropzoneId', dropzoneId);
             });
             
-            this.on("successmultiple", function(files, response) {
             // Gets triggered when the files have successfully been sent.
-            // Redirect user or notify of success.
+            this.on("successmultiple", function(files, response) {
                 //reset the form
                  $('#demoform')[0].reset();
                  //reset dropzone
@@ -130,11 +115,6 @@ $(function() {
                     sessionStorage.setItem("message", "New item added Successfully! ");
                     window.location.href = "{{ route('dropzone.index') }}";
                 }
-            });
-            
-            this.on("errormultiple", function(files, response) {
-            // Gets triggered when there was an error sending the files.
-            // Maybe show form again, and notify user of error
             });
         }
 	});
